@@ -24,8 +24,7 @@ app.get('/query/:term', async (req, res) => {
   const term = req.params.term
   console.log(term)
 
-  const query = await Promise.all(state.platforms.map(async (platform) => await queries[platform](term, state.limit)))
-  const streams = query.flat()
+  const streams = (await Promise.all(state.platforms.map(async (platform) => await queries[platform](term, state.limit)))).flat()
   const platforms = [...new Set(streams.map((stream) => stream.platform))]
 
   res.json({
