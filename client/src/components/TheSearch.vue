@@ -6,12 +6,13 @@
       class="search"
       type="text"
       name="search"
+      placeholder="Type ur query..."
     >
   </div>
 </template>
 
 <script>
-import { term, streams, loading } from '@/shared/state'
+import { term, streams, platforms, loading, speed } from '@/shared/state'
 import { get } from '@/shared/api'
 
 export default {
@@ -19,8 +20,20 @@ export default {
   setup() {
     async function search () {
       loading.value = true
-      streams.value = await get(term.value)
+
+      let counter = 0
+      const interval = setInterval(() => {
+        counter = counter + 10
+      }, 10)
+
+      const response = await get(term.value)
+      streams.value = response.streams
+      platforms.value = response.platforms
+      console.log(platforms.value, streams.value)
       loading.value = false
+
+      clearInterval(interval)
+      speed.value = counter
     }
 
     return {
@@ -35,9 +48,10 @@ export default {
 <style scoped>
 .search {
   width: 100%;
-  padding: 0.5em;
+  padding: 0.25em;
   font-family: serif;
   font-size: 2em;
+  text-transform: uppercase;
   border: 0;
   border-bottom: 1px solid black;
 }
