@@ -35,7 +35,7 @@ export default {
   setup() {
     const info = computed(() => {
       if (speed.value) {
-        return `The query took ${speed.value}ms and scraped streams from ${platforms.value}.`
+        return `The query took ${speed.value}ms and scraped streams from ${platforms.value.join(' and ')}.`
       } else {
         return '...'
       }

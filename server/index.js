@@ -20,11 +20,12 @@ app.set('json spaces', 2)
 
 app.use('/', express.static(path.join(__dirname, 'public')))
 
-app.get('/query/:term', async (req, res) => {
+app.get('/query/:term/:limit?', async (req, res) => {
   const term = req.params.term
-  console.log(term)
+  const limit = req.params.limit || state.limit
+  console.log(term, limit)
 
-  const streams = (await Promise.all(state.platforms.map(async (platform) => await queries[platform](term, state.limit)))).flat()
+  const streams = (await Promise.all(state.platforms.map(async (platform) => await queries[platform](term, limit)))).flat()
   const platforms = [...new Set(streams.map((stream) => stream.platform))]
 
   res.json({
